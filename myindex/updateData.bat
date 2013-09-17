@@ -1,0 +1,1 @@
+java -Durl="http://localhost:8983/solr/myworkspace/update" -jar post.jar myworkspace\updatexml.xml

@@ -1,0 +1,54 @@
+<add>
+  <doc>
+    <field name="id">tc001</field>
+    <field name="type">test case</field>
+    <field name="title">put the title here</field>
+    <field name="tcid">tc001</field>    
+    <field name="qcid">qc001</field>
+    <field name="tcname">tools_team/sanity/checkLinuxVersions.tc</field>
+    <field name="author">Henry Zhong</field>
+    <field name="created">2011-03-01</field>
+    <field name="tag">sanity</field>
+    <field name="tag">linux</field>
+    <field name="tag">switch</field>
+    <field name="ne">HOST</field>
+    <field name="ne">ENODEB</field>
+    <field name="purpose">library with general support functions</field>
+    <field name="usage">use the call helper to set up the function calls</field>
+    <field name="function">getVersion</field>
+    <field name="function">checkLogin</field> 
+    <field name="function">addUser</field>   
+    <field name="function">delUser</field>
+    <field name="content">      setGlobalVariable g_string $g_str
+      getGlobalVariable g_string $local_str
+        print g_string: $local_str
+        if $local_str != "hello world!"
+          failCase failed for string type</field>    
+    <field name="url">https://192.168.1.3/svn/easytest/tc001.tc</field>    
+  </doc>
+  <doc>
+    <field name="id">tc002</field>
+    <field name="type">test case</field>
+    <field name="title">put the title here</field>
+    <field name="tcid">tc002</field>    
+    <field name="qcid">qc002</field>
+    <field name="tcname">tools_team/sanity/addNewUser.tc</field>
+    <field name="author">Jack London</field>
+    <field name="created">2013-08-05</field>
+    <field name="tag">sanity</field>
+    <field name="tag">linux</field>
+    <field name="tag">adduser</field>
+    <field name="ne">HOST</field>
+    <field name="ne">RNC</field>    
+    <field name="ne">NODEB</field>        
+    <field name="purpose">library with general support functions</field>
+    <field name="usage">use the call helper to set up the function calls</field>
+    <field name="function">checkUser</field>       
+    <field name="function">addUser</field>   
+    <field name="function">delUser</field>
+    <field name="content">    eval $map["name"] = "zhu"
+    fork -threadName mythread -function IT/language/action/fork/testAction_fork_waitThread::function2 -map $map
+    waitThread mythread</field>    
+    <field name="url">https://192.168.1.3/svn/easytest/tc002.tc</field>    
+  </doc>  
+</add>

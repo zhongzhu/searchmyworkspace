@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema version="1.5">
+  <fields>
+    <field name="id" type="string" indexed="true" stored="true" required="true"/>    
+    <field name="type" type="string" indexed="true" stored="true" required="true"/>
+    <field name="title" type="string" indexed="true" stored="true" required="true"/>
+    <field name="tcid" type="string" indexed="true" stored="true" required="true"/>    
+    <field name="qcid" type="string" indexed="true" stored="true" required="true"/>        
+    <field name="tcname" type="string" indexed="true" stored="true" required="true"/>     
+    <field name="author" type="text_general" indexed="true" stored="true" required="true"/>
+    <field name="created" type="string" indexed="true" stored="true" required="true"/>
+    <field name="tag" type="string" multiValued="true" indexed="true" stored="true" required="true"/>    
+    <field name="purpose" type="string" indexed="true" stored="true" required="true"/>
+    <field name="ne" type="string" multiValued="true" indexed="true" stored="true" required="true"/>        
+    <field name="usage" type="string" indexed="true" stored="true" required="true"/>
+    <field name="function" type="string" multiValued="true" indexed="true" stored="true" required="true"/>
+    <field name="content" type="text_general" indexed="true" stored="true" required="true"/>
+    <field name="url" type="string" indexed="true" stored="true" required="true"/>
+    <field name="text" type="text_general" multiValued="true" indexed="true" stored="false" />
+    <copyField source="content" dest="text" />    
+    <copyField source="function" dest="text" />    
+    <copyField source="author" dest="text" />        
+    <copyField source="tag" dest="text" />        
+    <copyField source="tcid" dest="text" />        
+    <copyField source="qcid" dest="text" />
+    <copyField source="tcname" dest="text" />    
+  </fields>
+  <uniqueKey>id</uniqueKey>
+  <types>
+    <fieldType name="string" class="solr.StrField" />
+    <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType>
+  </types>
+</schema>
+
