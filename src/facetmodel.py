@@ -1,12 +1,21 @@
 from PySide import QtCore
 
 class TreeItem(object):
-    def __init__(self, data, isLeaf = True, parent=None):
+    FACET_NAME = 0
+    FACET_VALUE = 1
+    def __init__(self, data, isLeaf = True, isChecked = False, parent=None):
         self.parentItem = parent
+        #('test case', 2)
         self.itemData = data
-        self.checked = False
+        self.checked = isChecked
         self.isLeaf = isLeaf
         self.childItems = []
+
+    def getMyName(self):
+        return self.itemData[TreeItem.FACET_NAME]
+
+    def getMyValue(self):
+        return self.itemData[TreeItem.FACET_VALUE]        
 
     def setChecked(self, checked):
         self.checked = checked
@@ -23,12 +32,6 @@ class TreeItem(object):
     def columnCount(self):
         return len(self.itemData)
 
-    # def data(self, column):
-    #     try:
-    #         return self.itemData[column]
-    #     except IndexError:
-    #         return None
-
     def data(self, role):
         if QtCore.Qt.CheckStateRole == role:
             if self.isLeaf:
@@ -38,9 +41,9 @@ class TreeItem(object):
                     return QtCore.Qt.Unchecked
         elif QtCore.Qt.DisplayRole == role:
             if self.isLeaf:
-                return "{0} ({1})".format(self.itemData[0], self.itemData[1]) 
+                return "{0} ({1})".format(self.getMyName(), self.getMyValue()) 
             else:
-                return self.itemData[0]
+                return self.getMyName()
         else:
             return None       
 
@@ -53,13 +56,53 @@ class TreeItem(object):
 
         return 0
 
+class FacetSearchOptions(object):
+    def __init__(self):
+        super(FacetSearchOptions, self).__init__()
+        self.options = set()
+
+    def updateOption(self, facetFieldName, facetName, isToAdd = True):
+        # 'fq':['ne:("RNC")' ,'ne:("HOST")']
+        option = '{0}:("{1}")'.format(facetFieldName, facetName)
+        if isToAdd:
+            self.options.add(option)
+        else:
+            if option in self.options:
+                self.options.remove(option)
+
+    def getOptions(self):
+        if len(self.options) > 0:
+            return dict({'fq':list(self.options)})        
+        else:
+            return {}
+
+    def clear(self):
+        self.options.clear()
+
+    def thisFacetNameWasSelected(self, facetFieldName, facetName):
+        option = '{0}:("{1}")'.format(facetFieldName, facetName)
+        if option in self.options:
+            return True
+        else:
+            return False
+
 class FacetModel(QtCore.QAbstractItemModel):
+    facetOptionChanged = QtCore.Signal()
+
     def __init__(self, parent=None):
         super(FacetModel, self).__init__(parent)
-        self.rootItem = TreeItem(("Facet"), False, None)  
+        self.rootItem = TreeItem(("Facet"), False, False, None)
+        self.facetSearchOptions = FacetSearchOptions()
+
+    def thisFacetNameWasSelected(self, facetFieldName, facetName):
+        return self.facetSearchOptions.thisFacetNameWasSelected(facetFieldName, facetName)
+
+    def getFacetSearchOptions(self):
+        return self.facetSearchOptions.getOptions()
 
     def clearMyModel(self):
-        self.rootItem = TreeItem(("Facet"), False, None)
+        self.rootItem = TreeItem(("Facet"), False, False, None)
+        self.facetSearchOptions.clear()
         self.reset()              
 
     def columnCount(self, parent):
@@ -80,9 +123,13 @@ class FacetModel(QtCore.QAbstractItemModel):
         item = index.internalPointer()
         if QtCore.Qt.CheckStateRole == role:
             item.setChecked(value)
-            self.dataChanged.emit(index, index);
-            print(item.data(QtCore.Qt.DisplayRole))
+            self.dataChanged.emit(index, index)
+
+            self.facetSearchOptions.updateOption(item.parentItem.getMyName(), item.getMyName(), value)
+            self.facetOptionChanged.emit()
             return True
+        else:
+            return False
 
     def flags(self, index):
         if not index.isValid():
@@ -96,7 +143,7 @@ class FacetModel(QtCore.QAbstractItemModel):
 
     def headerData(self, section, orientation, role):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
-            return "Categories"
+            return "Refine your search results"
 
     def index(self, row, column, parent):
         if not self.hasIndex(row, column, parent):
@@ -145,15 +192,19 @@ class FacetModel(QtCore.QAbstractItemModel):
           +----sanity (1)
           +----feature (2) 
         """
+        self.rootItem = TreeItem(("Facet"), False, False, None)
+
         facet_fields = facets.get('facet_fields')
-        for oneFacetField in facet_fields.keys():
-            oneFacetItem = TreeItem((oneFacetField, None), False, self.rootItem)
-            self.rootItem.appendChild(oneFacetItem)
+        for facetFieldName in facet_fields.keys():
+            facetFieldItem = TreeItem((facetFieldName, None), False, False, self.rootItem)
+            self.rootItem.appendChild(facetFieldItem)
 
             #["a",1,"b",2] -> [("a",1),("b",2)]
-            keywordAndCount = facet_fields[oneFacetField]            
-            keywordAndCountTuples = zip(*[iter(keywordAndCount)]*2)
-            for eachKeywordAndCountTuple in keywordAndCountTuples:
-                oneFacetItem.appendChild(TreeItem(eachKeywordAndCountTuple, True, oneFacetItem))
+            facetNameAndValueTupleList = zip(*[iter(facet_fields[facetFieldName])]*2)
+            for facetNameAndValueTuple in facetNameAndValueTupleList:
+                facetFieldItem.appendChild(
+                    TreeItem(facetNameAndValueTuple, True, 
+                        self.thisFacetNameWasSelected(facetFieldName, facetNameAndValueTuple[0]), 
+                        facetFieldItem))
 
         self.reset()

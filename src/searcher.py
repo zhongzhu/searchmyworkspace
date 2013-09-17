@@ -3,23 +3,21 @@ from PySide import QtCore
 
 class Searcher(QtCore.QObject):
     """ Used to search Solr Index """
-    searchDone = QtCore.Signal()
+    searchDone = QtCore.Signal(int)
 
     def __init__(self):
         super(Searcher, self).__init__()
         self.query = ""
         self.results = None       
         self.options = {'facet':'true', 'facet.field':['type','ne','tag','author'], 'facet.mincount':'1'} 
+        self.solr = pysolr.Solr('http://localhost:8983/solr/myworkspace', timeout=10)
 
-    def search(self, query, option = {}):
+    def search(self, query, userOptions = {}):
         self.query = query
-        self.results = None
-        solr = pysolr.Solr('http://localhost:8983/solr/myworkspace', timeout=10)
-        newOptions = dict(self.options, **option)
+        newOptions = dict(self.options, **userOptions)
 
-        self.results = solr.search(self.query, **newOptions)
-        if len(self.results) > 0:
-            self.searchDone.emit()
+        self.results = self.solr.search(self.query, **newOptions)
+        self.searchDone.emit(len(self.results))
 
     def getDocs(self):
         if self.results:

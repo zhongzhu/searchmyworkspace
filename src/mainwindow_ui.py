@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Mon Sep 16 15:41:28 2013
+# Created: Tue Sep 17 12:44:44 2013
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -34,22 +34,22 @@ class Ui_MainWindow(object):
         self.splitter = QtGui.QSplitter(self.centralwidget)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
-        self.treeView_facet = QtGui.QTreeView(self.splitter)
+        self.treeView_facet = FacetTreeView(self.splitter)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.treeView_facet.sizePolicy().hasHeightForWidth())
         self.treeView_facet.setSizePolicy(sizePolicy)
         self.treeView_facet.setObjectName("treeView_facet")
-        self.widget = QtGui.QWidget(self.splitter)
-        self.widget.setObjectName("widget")
-        self.verticalLayout = QtGui.QVBoxLayout(self.widget)
+        self.layoutWidget = QtGui.QWidget(self.splitter)
+        self.layoutWidget.setObjectName("layoutWidget")
+        self.verticalLayout = QtGui.QVBoxLayout(self.layoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.label_searchResult = QtGui.QLabel(self.widget)
+        self.label_searchResult = QtGui.QLabel(self.layoutWidget)
         self.label_searchResult.setObjectName("label_searchResult")
         self.verticalLayout.addWidget(self.label_searchResult)
-        self.listView_result = QtGui.QListView(self.widget)
+        self.listView_result = QtGui.QListView(self.layoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(1)
         sizePolicy.setVerticalStretch(0)
@@ -79,3 +79,4 @@ class Ui_MainWindow(object):
         self.pushButton_search.setText(QtGui.QApplication.translate("MainWindow", "Search", None, QtGui.QApplication.UnicodeUTF8))
         self.label_searchResult.setText(QtGui.QApplication.translate("MainWindow", "Search Results:", None, QtGui.QApplication.UnicodeUTF8))
 
+from facettreeview import FacetTreeView
