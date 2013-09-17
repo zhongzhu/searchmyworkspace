@@ -14,7 +14,7 @@ class Searcher(QtCore.QObject):
     def search(self, query, option = {}):
         self.query = query
         self.results = None
-        solr = pysolr.Solr('http://localhost:8983/solr/mytc', timeout=10)
+        solr = pysolr.Solr('http://localhost:8983/solr/myworkspace', timeout=10)
         newOptions = dict(self.options, **option)
 
         self.results = solr.search(self.query, **newOptions)
