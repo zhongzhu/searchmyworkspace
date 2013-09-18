@@ -1,6 +1,6 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
-from tccodehighlighter import Highlighter
+from highlighter import TestCaseHighlighter
 from roles import ResultRoles
 
 class MyItemSize(object):
@@ -90,7 +90,7 @@ class SearchResultsDelegate(QStyledItemDelegate):
         previewWindow.setFont(font)
         previewWindow.resize(option.rect.width() - MyItemSize.MarginSize * 2, MyItemSize.PreviewWindowHeight)
 
-        highlighter = Highlighter(previewWindow.document())       
+        highlighter = TestCaseHighlighter(previewWindow.document())               
         previewWindow.setPlainText(index.data(ResultRoles.PreviewContentRole))
 
         pixmap = QPixmap(previewWindow.size())        

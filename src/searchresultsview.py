@@ -4,6 +4,7 @@ from searchresultsmodel import SearchResultsModel
 from searchresultsdelegate import SearchResultsDelegate
 
 class SearchResultsView(QtCore.QObject):
+    viewDetailedContent = QtCore.Signal(str)
        
     def __init__(self, myWidget):
         super(SearchResultsView, self).__init__(myWidget)
@@ -18,7 +19,12 @@ class SearchResultsView(QtCore.QObject):
         self.myWidget.doubleClicked.connect(self.openViewer)
 
     def openViewer(self, index):
-    	pass
+        if not index.isValid():
+            return
+
+        url = self.searchResultsModel.getUrl(index)
+        if len(url) > 0:
+            self.viewDetailedContent.emit(url)
 
     def clear(self):
     	self.searchResultsModel.clearMyModel()

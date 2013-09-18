@@ -1,9 +1,9 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
 
-class Highlighter(QSyntaxHighlighter):
+class TestCaseHighlighter(QSyntaxHighlighter):
     def __init__(self, parent=None):
-        super(Highlighter, self).__init__(parent)
+        super(TestCaseHighlighter, self).__init__(parent)
 
         keywordFormat = QTextCharFormat()
         keywordFormat.setForeground(Qt.darkBlue)

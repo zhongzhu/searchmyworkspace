@@ -5,6 +5,7 @@ from facetmodel import FacetModel
 from searcher import Searcher
 from facetview import FacetView
 from searchresultsview import SearchResultsView
+import viewer
 import pysolr
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
@@ -15,6 +16,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         self.searchResultsView = SearchResultsView(self.listView_result)
+        self.searchResultsView.viewDetailedContent.connect(self.showDetailedContent)
 
         self.facetView = FacetView(self.treeView_facet)
         self.facetView.facetOptionChanged.connect(self.search)
@@ -34,6 +36,10 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         query = self.lineEdit_search.text()
         options = self.facetView.getFacetSearchOptions()
         self.searcher.search(query, options)
+
+    def showDetailedContent(self, fileLocation):
+        myviewer = viewer.viewerSimpleFactory(fileLocation, self)
+        myviewer.showDetailedContent()
 
     @QtCore.Slot(int)
     def searchDone(self, searchResultCount):

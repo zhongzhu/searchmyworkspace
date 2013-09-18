@@ -15,7 +15,10 @@ class SearchResultsModel(QtCore.QAbstractListModel):
 
     def handleSearchResults(self, docs):
         self.docs = docs
-        self.reset()        
+        self.reset()
+
+    def getUrl(self, index):
+        return self.docs[index.row()]["url"]        
 
     def data(self, index, role):     
         if not index.isValid():
