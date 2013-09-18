@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Tue Sep 17 12:44:44 2013
+# Created: Tue Sep 17 17:01:44 2013
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(615, 486)
+        MainWindow.resize(705, 562)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.centralwidget)
@@ -34,12 +34,13 @@ class Ui_MainWindow(object):
         self.splitter = QtGui.QSplitter(self.centralwidget)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
-        self.treeView_facet = FacetTreeView(self.splitter)
+        self.treeView_facet = QtGui.QTreeView(self.splitter)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.treeView_facet.sizePolicy().hasHeightForWidth())
         self.treeView_facet.setSizePolicy(sizePolicy)
+        self.treeView_facet.setMaximumSize(QtCore.QSize(200, 16777215))
         self.treeView_facet.setObjectName("treeView_facet")
         self.layoutWidget = QtGui.QWidget(self.splitter)
         self.layoutWidget.setObjectName("layoutWidget")
@@ -62,7 +63,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setStretch(1, 6)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 615, 20))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 705, 20))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
@@ -79,4 +80,3 @@ class Ui_MainWindow(object):
         self.pushButton_search.setText(QtGui.QApplication.translate("MainWindow", "Search", None, QtGui.QApplication.UnicodeUTF8))
         self.label_searchResult.setText(QtGui.QApplication.translate("MainWindow", "Search Results:", None, QtGui.QApplication.UnicodeUTF8))
 
-from facettreeview import FacetTreeView

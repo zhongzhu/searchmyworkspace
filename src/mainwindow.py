@@ -1,11 +1,10 @@
 from PySide import QtCore
 from PySide import QtGui
 from mainwindow_ui import Ui_MainWindow
-from searchresultsmodel import SearchResultsModel
 from facetmodel import FacetModel
-from searchresultsdelegate import SearchResultsDelegate
 from searcher import Searcher
 from facettreeview import FacetTreeView
+from searchresultsview import SearchResultsView
 import pysolr
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
@@ -14,15 +13,16 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
                 
         self.setupUi(self)
+        self.searchresulsview = SearchResultsView(self.listView_result)
 
         self.setWindowTitle("Search My Workspace")
 
         # ListView to display search results
-        self.searchResultsModel = SearchResultsModel()
-        self.listView_result.setModel(self.searchResultsModel)
+        # self.searchResultsModel = SearchResultsModel()
+        # self.listView_result.setModel(self.searchResultsModel)
 
-        searchResultsDelegate = SearchResultsDelegate(self.listView_result)
-        self.listView_result.setItemDelegate(searchResultsDelegate);
+        # searchResultsDelegate = SearchResultsDelegate(self.listView_result)
+        # self.listView_result.setItemDelegate(searchResultsDelegate);
 
         # TreeView to display facets
         self.facetModel = FacetModel()
@@ -39,7 +39,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     ''' connect signal/slot pairs '''
     def createConnections(self):
-        self.pushButton_search.clicked.connect(self.searchResultsModel.clearMyModel)
+        self.pushButton_search.clicked.connect(self.searchresulsview.clear)
         self.pushButton_search.clicked.connect(self.facetModel.clearMyModel)
         self.pushButton_search.clicked.connect(self.search)
 
@@ -51,7 +51,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     @QtCore.Slot(int)
     def searchDone(self, searchResultCount):
         if searchResultCount > 0:
-            self.searchResultsModel.handleSearchResults(self.searcher.getDocs())
+            self.searchresulsview.handleSearchResults(self.searcher.getDocs())
             self.facetModel.handleSearchResults(self.searcher.getFacets())
         
         self.label_searchResult.setText('About {0} search results for [{1}]'.format(searchResultCount, self.searcher.getQuery()))
