@@ -17,7 +17,6 @@ class Viewer(QtGui.QMainWindow):
         pass
 
     def setContentToViewer(self, fileContent, highlighter):
-        print('fddfd')
         pass
 
 class TestCaseViewer(Viewer, Ui_MainWindow_TestCaseViewer):

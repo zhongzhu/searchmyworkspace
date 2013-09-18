@@ -1,0 +1,38 @@
+<testCase version="1.0" tcid="tc001" qcid="qc001" >
+    <general>
+        <author>your name</author>
+        <created>2010-07-09</created>
+        <purpose>Put the test case purpose here</purpose>
+        <usage>Put the test case usage here</usage>
+        <title>put title here</title>
+    </general>
+    <procedure desc="" type="public" name="if_else_statement" >
+        <arguments>
+            <arg desc="" attribute="" available="" type="string" value="" name="name" />
+        </arguments>
+        <variables/>
+        <respmappingList/>
+        <steps>
+            <step action="if" uuid="{ca7c0ecb-87e2-4eec-a35e-78cbefcbacfe}" object=" " >
+                <parameter>$name=="henry"</parameter>
+                <response/>
+                <subSteps>
+                    <step action="print" uuid="{d343cdb8-201a-4387-a610-bf53d4e40ecd}" object=" " >
+                        <parameter>I am henry</parameter>
+                        <response/>
+                    </step>
+                </subSteps>
+            </step>
+            <step action="else" uuid="{20ba9c39-257e-40f3-9340-dd581b3a403d}" object=" " >
+                <parameter></parameter>
+                <response/>
+                <subSteps>
+                    <step action="print" uuid="{7e2bd9e7-1f5a-4376-92c9-9e80850d6209}" object=" " >
+                        <parameter>I am $name</parameter>
+                        <response/>
+                    </step>
+                </subSteps>
+            </step>
+        </steps>
+    </procedure>
+</testCase>
