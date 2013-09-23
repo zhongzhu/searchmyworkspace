@@ -6,7 +6,7 @@
         <usage>Put the test case usage here</usage>
         <title>put title here</title>
     </general>
-    <procedure desc="" type="public" name="if_else_statement" >
+    <procedure desc="this is a description" type="public" name="if_else_statement" >
         <arguments>
             <arg desc="" attribute="" available="" type="string" value="" name="name" />
         </arguments>

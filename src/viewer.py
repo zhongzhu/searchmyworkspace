@@ -2,6 +2,7 @@ from PySide import QtCore
 from PySide import QtGui
 from testcaseviewer_ui import Ui_MainWindow_TestCaseViewer
 from testasset import TestAsset, TestCase
+from utils.tc2tet import Tc2Tet
 
 def viewerSimpleFactory(fileLocation, parent = None):
     if fileLocation.endswith('.tc'):
@@ -31,7 +32,6 @@ class TestCaseViewer(Viewer, Ui_MainWindow_TestCaseViewer):
             return
 
         self.setWindowTitle(fileLocation)
-
         try:
             fileContent = self.testAsset.getFileContent()
             highlighter = self.testAsset.setSyntaxHighlighter(self.textEdit_viewer.document())            
@@ -43,4 +43,3 @@ class TestCaseViewer(Viewer, Ui_MainWindow_TestCaseViewer):
 
     def setContentToViewer(self, fileContent, highlighter):
         self.textEdit_viewer.setPlainText(fileContent)
-                 
