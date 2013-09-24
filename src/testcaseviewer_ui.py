@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'testcaseviewer.ui'
 #
-# Created: Wed Sep 18 14:09:20 2013
+# Created: Tue Sep 24 17:09:33 2013
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -22,6 +22,7 @@ class Ui_MainWindow_TestCaseViewer(object):
         font.setFamily("Courier")
         font.setPointSize(10)
         self.textEdit_viewer.setFont(font)
+        self.textEdit_viewer.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.textEdit_viewer.setObjectName("textEdit_viewer")
         self.verticalLayout.addWidget(self.textEdit_viewer)
         MainWindow_TestCaseViewer.setCentralWidget(self.centralwidget)

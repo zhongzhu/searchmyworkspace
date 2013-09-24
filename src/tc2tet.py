@@ -9,14 +9,18 @@ Title {title}
 Author {author}
 Created {created}
 Purpose {purpose}
-Usage {usage}"""
+Usage {usage}
+"""
     functionTemplate = """function::{name}
   {name}:description
 {description}
+
   {name}:arguments
 {arguments}
+
   {name}:variables
 {variables}
+
   {name}:steps"""
 
     def __init__(self):
