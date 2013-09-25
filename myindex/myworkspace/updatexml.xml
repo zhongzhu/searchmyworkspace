@@ -24,7 +24,7 @@
         print g_string: $local_str
         if $local_str != "hello world!"
           failCase failed for string type</field>    
-    <field name="url">https://192.168.1.3/svn/easytest/tc001.tc</field>    
+    <field name="url">D:\GitHub\searchmyworkspace\src\utils\if_else.tc</field>    
   </doc>
   <doc>
     <field name="id">tc002</field>
@@ -49,6 +49,6 @@
     <field name="content">    eval $map["name"] = "zhu"
     fork -threadName mythread -function IT/language/action/fork/testAction_fork_waitThread::function2 -map $map
     waitThread mythread</field>    
-    <field name="url">https://192.168.1.3/svn/easytest/tc002.tc</field>    
+    <field name="url">D:\GitHub\searchmyworkspace\src\utils\switch_case_default.tc</field>    
   </doc>  
 </add>
