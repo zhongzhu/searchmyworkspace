@@ -1,5 +1,6 @@
 import pysolr
 from PySide import QtCore
+import utils.myconfig
 
 class Searcher(QtCore.QObject):
     """ Used to search Solr Index """
@@ -8,9 +9,12 @@ class Searcher(QtCore.QObject):
     def __init__(self):
         super(Searcher, self).__init__()
         self.query = ""
-        self.results = None       
-        self.options = {'facet':'true', 'facet.field':['type','ne','tag','author'], 'facet.mincount':'1'} 
-        self.solr = pysolr.Solr('http://localhost:8983/solr/myworkspace', timeout=10)
+        self.results = None
+        self.options = {'facet':'true', 'facet.field':['type','ne','tag','author'], 'facet.mincount':'1'}
+        self.config = utils.myconfig.MyConfig()
+
+        solrURL = self.config.get('solr', 'solrURL')
+        self.solr = pysolr.Solr(solrURL, timeout=10)
 
     def search(self, query, userOptions = {}):
         self.query = query
@@ -23,19 +27,19 @@ class Searcher(QtCore.QObject):
         if self.results:
             return self.results.docs
         else:
-            return []     
+            return []
 
     def getFacets(self):
         if self.results:
             return self.results.facets
         else:
-            return []                      
-            
+            return []
+
     def getHits(self):
         if self.results:
             return self.results.hits
         else:
-            return 0         
+            return 0
 
     def getQuery(self):
-        return self.query                  
+        return self.query

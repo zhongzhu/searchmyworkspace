@@ -1,8 +1,12 @@
 import pysolr
+import utils.myconfig
 
 class Updater(object):
     def __init__(self):
-        self.solr = pysolr.Solr('http://localhost:8983/solr/myworkspace', timeout=10)
+        self.config = utils.myconfig.MyConfig()
+
+        solrURL = self.config.get('solr', 'solrURL')
+        self.solr = pysolr.Solr(solrURL, timeout=10)
 
     def update(self, documents):
         """

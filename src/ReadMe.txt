@@ -1,6 +1,10 @@
-1. refined search by facets
-2. syntax highlight for result
-syntax highlight for tet
-3. indexing
-4. auto-complete
-5. suggestion
+- indexing
+    telnet.connect,
+    setLogfileGlobalVariables:variables,
+    substring search (getName -> get | name)
+    numbers
+- refined search by facets
+- syntax highlight for result
+- syntax highlight for tet
+- auto-complete
+- suggestion
