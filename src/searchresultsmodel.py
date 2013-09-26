@@ -13,14 +13,15 @@ class SearchResultsModel(QtCore.QAbstractListModel):
         self.docs = []
         self.reset()
 
-    def handleSearchResults(self, docs):
+    def handleSearchResults(self, docs, highlightings):
+        self._updateDocWithHighlight(docs, highlightings)
         self.docs = docs
         self.reset()
 
     def getUrl(self, index):
-        return self.docs[index.row()]["url"]        
+        return self.docs[index.row()]["url"]
 
-    def data(self, index, role):     
+    def data(self, index, role):
         if not index.isValid():
             return None
 
@@ -30,11 +31,11 @@ class SearchResultsModel(QtCore.QAbstractListModel):
         if role == QtCore.Qt.DisplayRole:
             return self.docs[index.row()]["tcname"]
         elif role == ResultRoles.TypeRole:
-            return self.docs[index.row()]["type"]    
+            return self.docs[index.row()]["type"]
         elif role == ResultRoles.AuthorRole:
-            return self.docs[index.row()]["author"]                
+            return self.docs[index.row()]["author"]
         elif role == ResultRoles.DateRole:
-            return self.docs[index.row()]["created"]                      
+            return self.docs[index.row()]["created"]
         elif role == ResultRoles.TitleRole:
             return self.docs[index.row()]["tcname"]
         elif role == ResultRoles.PreviewContentRole:
@@ -44,3 +45,8 @@ class SearchResultsModel(QtCore.QAbstractListModel):
 
     def rowCount(self, parent):
         return len(self.docs)
+
+    def _updateDocWithHighlight(self, docs, highlightings):
+        if len(highlightings) > 0:
+            for doc in docs:
+                doc['content'] = highlightings[doc['id']]['content'][0]

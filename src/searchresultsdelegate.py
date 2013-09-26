@@ -6,8 +6,8 @@ from roles import ResultRoles
 class MyItemSize(object):
     # size for displayed items
     MarginSize = 8
-    PreviewWindowHeight = 100    
-    TitleHeight = 20 
+    PreviewWindowHeight = 100
+    TitleHeight = 20
     DescriptionHeight = 20
     MyHeight = MarginSize * 2 + TitleHeight + DescriptionHeight + PreviewWindowHeight
 
@@ -29,7 +29,7 @@ class SearchResultsDelegate(QStyledItemDelegate):
         | |                      tc title                        | |
         |M|------------------------------------------------------|M|
         | |                      description                     | |
-        | |------------------------------------------------------| |        
+        | |------------------------------------------------------| |
         | |                      preview window                  | | M = Margin
         +-+------------------------------------------------------+-+
         |                          margin                          |
@@ -53,13 +53,13 @@ class SearchResultsDelegate(QStyledItemDelegate):
         titleRect.setHeight(MyItemSize.TitleHeight)
 
         title = index.data(ResultRoles.TitleRole)
-        
+
         painter.save()
         f = QFont()
         f.setBold(True)
-        f.setPointSize(12)        
-        painter.setFont(f)    
-        painter.setPen(QPen(Qt.blue))        
+        f.setPointSize(12)
+        painter.setFont(f)
+        painter.setPen(QPen(Qt.blue))
         fontMetrics = QFontMetrics(f)
         painter.drawText(titleRect, Qt.AlignLeft | Qt.AlignTop, fontMetrics.elidedText(title, Qt.ElideRight, titleRect.width()))
         painter.restore()
@@ -74,11 +74,11 @@ class SearchResultsDelegate(QStyledItemDelegate):
         description = "Type: {0} | Author: {1} | Date: {2}".format(index.data(ResultRoles.TypeRole), index.data(ResultRoles.AuthorRole), index.data(ResultRoles.DateRole))
         painter.save()
         descriptionFont = QFont()
-        painter.setFont(descriptionFont)    
+        painter.setFont(descriptionFont)
         painter.setPen(QPen(Qt.darkGray))
         fontMetrics = QFontMetrics(descriptionFont)
         painter.drawText(descriptionRect, Qt.AlignLeft | Qt.AlignTop, fontMetrics.elidedText(description, Qt.ElideRight, descriptionRect.width()))
-        painter.restore()        
+        painter.restore()
 
         # Preview window
         font = QFont()
@@ -90,14 +90,18 @@ class SearchResultsDelegate(QStyledItemDelegate):
         previewWindow.setFont(font)
         previewWindow.resize(option.rect.width() - MyItemSize.MarginSize * 2, MyItemSize.PreviewWindowHeight)
 
-        highlighter = TestCaseHighlighter(previewWindow.document())               
-        previewWindow.setPlainText(index.data(ResultRoles.PreviewContentRole))
+        highlighter = TestCaseHighlighter(previewWindow.document())
 
-        pixmap = QPixmap(previewWindow.size())        
+
+
+        # previewWindow.setPlainText(index.data(ResultRoles.PreviewContentRole))
+        previewWindow.setHtml('<pre>' + index.data(ResultRoles.PreviewContentRole) + '</pre>')
+
+        pixmap = QPixmap(previewWindow.size())
         previewWindow.render(pixmap)
 
-        previewWindowRect = QRect(option.rect.x() + MyItemSize.MarginSize, 
-                                option.rect.y() + MyItemSize.MarginSize + MyItemSize.TitleHeight + MyItemSize.DescriptionHeight, 
-                                previewWindow.width() - MyItemSize.MarginSize * 2, 
+        previewWindowRect = QRect(option.rect.x() + MyItemSize.MarginSize,
+                                option.rect.y() + MyItemSize.MarginSize + MyItemSize.TitleHeight + MyItemSize.DescriptionHeight,
+                                previewWindow.width() - MyItemSize.MarginSize * 2,
                                 previewWindow.height())
         painter.drawPixmap(previewWindowRect, pixmap)

@@ -5,14 +5,14 @@ from searchresultsdelegate import SearchResultsDelegate
 
 class SearchResultsView(QtCore.QObject):
     viewDetailedContent = QtCore.Signal(str)
-       
+
     def __init__(self, myWidget):
         super(SearchResultsView, self).__init__(myWidget)
         self.myWidget = myWidget
 
         self.searchResultsModel = SearchResultsModel()
         self.myWidget.setModel(self.searchResultsModel)
-        
+
         searchResultsDelegate = SearchResultsDelegate(self.myWidget)
         self.myWidget.setItemDelegate(searchResultsDelegate);
 
@@ -29,5 +29,5 @@ class SearchResultsView(QtCore.QObject):
     def clear(self):
     	self.searchResultsModel.clearMyModel()
 
-    def handleSearchResults(self, docs):
-        self.searchResultsModel.handleSearchResults(docs)
+    def handleSearchResults(self, docs, highlightings):
+        self.searchResultsModel.handleSearchResults(docs, highlightings)

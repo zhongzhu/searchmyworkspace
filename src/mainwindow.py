@@ -9,10 +9,10 @@ import viewer
 import pysolr
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
-       
+
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
-                
+
         self.setupUi(self)
 
         self.searchResultsView = SearchResultsView(self.listView_result)
@@ -25,8 +25,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.searcher = Searcher()
         self.searcher.searchDone.connect(self.searchDone)
 
-        self.createConnections()                
-    
+        self.createConnections()
+
     def createConnections(self):
         self.pushButton_search.clicked.connect(self.searchResultsView.clear)
         self.pushButton_search.clicked.connect(self.facetView.clear)
@@ -44,7 +44,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     @QtCore.Slot(int)
     def searchDone(self, searchResultCount):
         if searchResultCount > 0:
-            self.searchResultsView.handleSearchResults(self.searcher.getDocs())
+            self.searchResultsView.handleSearchResults(self.searcher.getDocs(), self.searcher.getHighlighting())
             self.facetView.handleSearchResults(self.searcher.getFacets())
-        
+
         self.label_searchResult.setText('About {0} search results for [{1}]'.format(searchResultCount, self.searcher.getQuery()))
