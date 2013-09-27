@@ -1,6 +1,6 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
-from highlighter import TestCaseHighlighter
+from testcase.highlighter import TetSyntaxHighlighter
 from roles import ResultRoles
 
 class MyItemSize(object):
@@ -87,14 +87,13 @@ class SearchResultsDelegate(QStyledItemDelegate):
         font.setPointSize(10)
 
         previewWindow = QTextEdit()
+        previewWindow.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        previewWindow.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         previewWindow.setFont(font)
         previewWindow.resize(option.rect.width() - MyItemSize.MarginSize * 2, MyItemSize.PreviewWindowHeight)
 
-        highlighter = TestCaseHighlighter(previewWindow.document())
+        highlighter = TetSyntaxHighlighter(previewWindow.document())
 
-
-
-        # previewWindow.setPlainText(index.data(ResultRoles.PreviewContentRole))
         previewWindow.setHtml('<pre>' + index.data(ResultRoles.PreviewContentRole) + '</pre>')
 
         pixmap = QPixmap(previewWindow.size())

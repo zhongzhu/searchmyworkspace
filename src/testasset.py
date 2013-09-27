@@ -1,6 +1,6 @@
 from PySide import QtCore
 from PySide import QtGui
-from highlighter import TestCaseHighlighter
+from testcase.highlighter import TetSyntaxHighlighter
 from tc2tet import Tc2Tet
 
 class TestAssetType(object):
@@ -33,7 +33,7 @@ class TestCase(TestAsset):
         return TestAssetType.TESTCASE
 
     def setSyntaxHighlighter(self, document):
-        TestCaseHighlighter(document)
+        TetSyntaxHighlighter(document)
 
     def getFileContent(self):
         tc2tet = Tc2Tet()
