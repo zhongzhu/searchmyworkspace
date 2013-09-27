@@ -14,6 +14,7 @@ class SearchResultsModel(QtCore.QAbstractListModel):
         self.reset()
 
     def handleSearchResults(self, docs, highlightings):
+        self._removeLeadingSpaces(highlightings)
         self._updateDocWithHighlight(docs, highlightings)
         self.docs = docs
         self.reset()
@@ -45,6 +46,23 @@ class SearchResultsModel(QtCore.QAbstractListModel):
 
     def rowCount(self, parent):
         return len(self.docs)
+
+    def _removeLeadingSpaces(self, highlightings):
+        [self._removeLeadingSpacesForOneString(highlightings[tc]['content'][0]) for tc in highlightings.iterkeys()]
+
+    def _removeLeadingSpacesForOneString(self, s):
+        miniSpaces = 0
+        spaces = sorted(list(set((len(k) - len(k.lstrip(' '))) for k in s.splitlines() if len(k) > 0)))
+        if len(spaces) > 0:
+            miniSpaces = spaces[0]
+
+        newString = []
+        for line in s.splitlines(True):
+            if line.isspace():
+                newString.append(line.lstrip(' '))
+            else:
+                newString.append(line[miniSpaces:])
+        return ''.join(newString)
 
     def _updateDocWithHighlight(self, docs, highlightings):
         if len(highlightings) > 0:

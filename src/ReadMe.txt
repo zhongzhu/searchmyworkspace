@@ -1,4 +1,4 @@
-- syntax highlight for result
+- syntax highlight for hits
 - indexing
     telnet.connect,
     setLogfileGlobalVariables:variables,
