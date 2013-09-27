@@ -6,6 +6,8 @@ import utils.updater
 from testcase import testcase
 from testcase import visitor
 from tc2tet import Tc2Tet
+import utils.myconfig
+from progress.bar import Bar
 
 def findTestCaseFile(path):
     for dirpath, dirs, files in os.walk(path):
@@ -69,15 +71,17 @@ class Indexer(object):
         startTime = time.time()
         myFindTestCaseFile = findTestCaseFile(workspacePath)
         tcFiles = list(myFindTestCaseFile)
-        print "found {} results in {} seconds in folder {}".format(len(tcFiles), time.time() - startTime, workspacePath)
+        print "Going to index {} test cases".format(len(tcFiles))
 
-        # docs = [self.indexOneTestCase(tcFile) for tcFile in tcFiles]
-        # print(docs)
-
+        # progresser = Bar('Indexing', max = len(tcFiles))
         for tcFile in tcFiles:
+            print(tcFile)
             doc = self.indexOneTestCase(tcFile)
             # print doc
             self.solr.update([doc])
+            # progresser.next()
+
+        # progresser.finish()
 
     def indexOneTestCase(self, testCaseFilePath):
         tc = testcase.TestCase(testCaseFilePath)
@@ -108,4 +112,7 @@ class Indexer(object):
 
 if __name__ == '__main__':
     indexer = Indexer()
-    indexer.indexMyWorkspace('C:\\Users\\zhzhong\\.EasyTest\\2.7.1Free\\workspace\\tc')
+    config = utils.myconfig.MyConfig()
+    folders = config.getList('solr', 'indexFolders')
+    for folder in folders:
+        indexer.indexMyWorkspace(folder)

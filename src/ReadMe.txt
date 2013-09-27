@@ -1,7 +1,6 @@
+- can't index: some tc files have wrong format
 - indexing
     numbers
-- refined search by facets
-- syntax highlight for tet
 - highlight for hits in tet
 - auto-complete
 - suggestion
