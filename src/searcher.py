@@ -1,6 +1,6 @@
 import pysolr
 from PySide import QtCore
-import utils.myconfig
+import myconfig
 
 class Searcher(QtCore.QObject):
     """ Used to search Solr Index """
@@ -14,10 +14,7 @@ class Searcher(QtCore.QObject):
         self.highLightOptions = {'hl':'true', 'hl.fragsize':'200',
             'hl.simple.pre':"<span style='background:yellow'>",
             'hl.simple.post':'</span>'}
-        self.config = utils.myconfig.MyConfig()
-
-        solrURL = self.config.get('solr', 'solrURL')
-        self.solr = pysolr.Solr(solrURL, timeout=10)
+        self.solr = pysolr.Solr(myconfig.solrURL, timeout=10)
 
     def search(self, query, userOptions = {}):
         if query == '':
