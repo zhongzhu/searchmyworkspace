@@ -19,7 +19,6 @@ class Indexer(object):
     def __init__(self):
         self.indexerVisitor = indexervisitor.IndexerVisitor()
         self.solr = utils.updater.Updater()
-        self.progresser = None
 
     def indexMyWorkspace(self, workspacePath):
         startTime = time.time()
@@ -28,16 +27,16 @@ class Indexer(object):
         tcFiles = list(myFindTestCaseFile)
         print "Going to index {} test cases in folder {}".format(len(tcFiles), workspacePath)
 
-        self.progresser = Bar('Indexing', max = len(tcFiles))
+        progresser = Bar('Indexing', max = len(tcFiles))
         for tcFile in tcFiles:
             try:
                 self.indexOneTestCase(tcFile)
             except Exception, e:
                 logging.error('Fail to index {}'.format(tcFile))
             finally:
-                self.progresser.next()
+                progresser.next()
 
-        self.progresser.finish()
+        progresser.finish()
         print('Time used: {} seconds'.format(time.time() - startTime))
 
     def indexOneTestCase(self, testCaseFilePath):
