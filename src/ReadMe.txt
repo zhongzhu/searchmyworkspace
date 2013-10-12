@@ -1,8 +1,7 @@
-- can't index: some tc files have wrong format
+- paging
 - indexing
     numbers
 - highlight for hits in tet
 - auto-complete
 - suggestion
-- paging
-- haha
+

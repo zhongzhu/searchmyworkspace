@@ -27,7 +27,7 @@ class Indexer(object):
         tcFiles = list(myFindTestCaseFile)
         print "Going to index {} test cases in folder {}".format(len(tcFiles), workspacePath)
 
-        progresser = Bar('Indexing', max = len(tcFiles))
+        # progresser = Bar('Indexing', max = len(tcFiles))
         for tcFile in tcFiles:
             try:
                 self.indexOneTestCase(tcFile)
@@ -35,13 +35,16 @@ class Indexer(object):
                 logging.error('Fail to index {}'.format(tcFile))
                 logging.error(str(e))
             finally:
-                progresser.next()
+                pass
+                # progresser.next()
 
-        progresser.finish()
+        # progresser.finish()
         print('Time used: {} seconds'.format(time.time() - startTime))
 
     def indexOneTestCase(self, testCaseFilePath):
         doc = self.indexerVisitor.generateIndexDocument(testCaseFilePath)
+        # print(testCaseFilePath)
+        # print(doc['content'])
         self.solr.update([doc])
 
 if __name__ == '__main__':

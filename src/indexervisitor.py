@@ -33,7 +33,9 @@ class IndexerVisitor(visitor.Visitor):
         self.doc['ne'] = []
         self.doc['usage'] = ''
         self.doc['function'] = []
-        self.doc['content'] = self.tc2tet.transformFromTestCase(tc)
+        content = self.tc2tet.transformFromTestCase(tc)
+        print(len(content))
+        self.doc['content'] = content #self.tc2tet.transformFromTestCase(tc)
         self.doc['url'] = tc.tcFileName
 
         self.visit(tc.rootStep)
@@ -75,5 +77,5 @@ class IndexerVisitor(visitor.Visitor):
 
 if __name__ == '__main__':
     v = IndexerVisitor()
-    doc = v.generateIndexDocument('D:\\EasyTest\\workspace\\tc\\service\\MS_LTE\\MS_LTE_aidaGetMobilesListFromAida.tc')
+    doc = v.generateIndexDocument('D:\\EasyTest\\workspace\\tc\\service\\MS_LTE\\G20Attach.tc')
     print(doc)

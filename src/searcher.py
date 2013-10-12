@@ -18,7 +18,7 @@ class Searcher(QtCore.QObject):
 
     def search(self, query, userOptions = {}):
         if query == '':
-            query = '*'
+            query = 'testcase'
         self.query = query
 
         newOptions = dict(self.options, **userOptions)
