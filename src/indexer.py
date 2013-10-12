@@ -33,6 +33,7 @@ class Indexer(object):
                 self.indexOneTestCase(tcFile)
             except Exception, e:
                 logging.error('Fail to index {}'.format(tcFile))
+                logging.error(str(e))
             finally:
                 progresser.next()
 

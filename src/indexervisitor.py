@@ -17,6 +17,7 @@ class IndexerVisitor(visitor.Visitor):
     def generateIndexDocument(self, testCaseFilePath):
         tc = testcase.TestCase(testCaseFilePath)
         tc.load()
+
         self.doc.clear()
         self.doc['id'] = self.keyGen.getMyKey('testcase', tc.tcFileName)
 
@@ -71,3 +72,8 @@ class IndexerVisitor(visitor.Visitor):
 
     def visit_StepActionSession(self, node):
         pass
+
+if __name__ == '__main__':
+    v = IndexerVisitor()
+    doc = v.generateIndexDocument('D:\\EasyTest\\workspace\\tc\\service\\MS_LTE\\MS_LTE_aidaGetMobilesListFromAida.tc')
+    print(doc)

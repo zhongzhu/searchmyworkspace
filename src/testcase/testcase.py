@@ -6,6 +6,7 @@ Created on Feb 8, 2012
 
 from xml.dom import minidom
 from xml.dom.minidom import *
+import re
 
 class StepType:
     STEP = 0
@@ -55,24 +56,21 @@ class Step(object):
     def child(self, row):
         return self.children[row]
 
-    def _getText(self, theDic, node):
-        '''
-        get text value from Element node like
-        <haha>the text value</haha>
-        '''
-        rc = []
-        for n in node.childNodes:
-            if n.nodeType == node.TEXT_NODE:
-                rc.append(n.data)
+    def _getElementNameAndTextValue(self, theDic, node):
+        """
+        <haha>the text value</haha>  -> {'haha': 'the text value'}
+        <haha></haha>  -> {'haha':'not available'}
+        """
+        text = ''.join([n.data for n in node.childNodes if n.nodeType == node.TEXT_NODE])
+        if text == '':
+            text = 'not available'
+        theDic.update({node.tagName : text})
 
-        theDic.update({node.tagName : ''.join(rc)})
-
-    def _getAttrValuePairs(self, theDict, node, attrNames):
+    def _getAttrNameValuePairs(self, node, attrNames):
         if node.nodeType != Node.ELEMENT_NODE:
-            return
+            return {}
 
-        for attr in attrNames:
-            theDict.update({attr : node.getAttribute(attr)})
+        return {attr : node.getAttribute(attr) for attr in attrNames}
 
 class StepTestCase(Step):
     def __init__(self):
@@ -83,19 +81,20 @@ class StepTestCase(Step):
         super(StepTestCase, self).load(node, parentStep)
 
         # get data for testcase step
-        self._getAttrValuePairs(self.data, node, ['version', 'tcid', 'qcid'])
+        self.data.update(self._getAttrNameValuePairs(node, ['version', 'tcid', 'qcid']))
 
         generalNode = node.getElementsByTagName('general')[0];
         for n in generalNode.childNodes:
             if n.nodeType == Node.ELEMENT_NODE:
-                self._getText(self.data, n)
+                self._getElementNameAndTextValue(self.data, n)
 
         #Functions
         functionNodes = node.getElementsByTagName('procedure')
         for childNode in functionNodes:
-            stepFunction = StepFunction()
-            self.children.append(stepFunction)
-            stepFunction.load(childNode, self)
+            if childNode.nodeType == Node.ELEMENT_NODE:
+                step = StepFactory.createStep(childNode)
+                self.children.append(step)
+                step.load(childNode, self)
 
 class StepFunction(Step):
     def __init__(self):
@@ -116,28 +115,21 @@ class StepFunction(Step):
     def load(self, node, parentStep):
         super(StepFunction, self).load(node, parentStep)
 
-        self._getAttrValuePairs(self.data, node, ['desc', 'type', 'name'])
+        self.data.update(self._getAttrNameValuePairs(node, ['desc', 'type', 'name']))
 
-        #Arguments, Variable
+        # Arguments
         argElements = node.getElementsByTagName('arguments')[0].getElementsByTagName('arg')
-        arguments = []
-        for eachArg in argElements:
-            oneArgument = {}
-            self._getAttrValuePairs(oneArgument, eachArg, ['desc', 'attribute', 'available', 'type', 'value', 'name'])
-            arguments.append(oneArgument)
+        self.data['arguments'] = [self._getAttrNameValuePairs(argElment,
+                                        ['desc', 'attribute', 'available', 'type', 'value', 'name'])
+                                        for argElment in argElements]
 
-        self.data['arguments'] = arguments
-
+        # Variable
         varElements = node.getElementsByTagName('variables')[0].getElementsByTagName('var')
-        variables = []
-        for eachVar in varElements:
-            oneVariable = {}
-            self._getAttrValuePairs(oneVariable, eachVar, ['desc', 'type', 'value', 'name'])
-            variables.append(oneVariable)
+        self.data['variables'] = [self._getAttrNameValuePairs(varElement,
+                                    ['desc', 'type', 'value', 'name'])
+                                    for varElement in varElements]
 
-        self.data['variables'] = variables
-
-        #Steps
+        # Steps
         stepsNode = node.getElementsByTagName('steps')[0]
         for childNode in stepsNode.childNodes:
             if childNode.nodeType == Node.ELEMENT_NODE:
@@ -161,12 +153,11 @@ class StepAction(Step):
     def load(self, node, parentStep):
         super(StepAction, self).load(node, parentStep)
         # <step action="open" uuid="{2339dfce-7024-43d2-a86d-be357b1ccb06}" object="tss" >
-        self._getAttrValuePairs(self.data, node, ['action', 'uuid', 'object'])
+        self.data.update(self._getAttrNameValuePairs(node, ['action', 'uuid', 'object']))
 
         # <parameter>$ts_host -reuse gtss</parameter>
         parameterNode = node.getElementsByTagName('parameter')[0];
-        self._getText(self.data, parameterNode)
-        # print(self.data)
+        self._getElementNameAndTextValue(self.data, parameterNode)
 
         # <response/>
 
@@ -189,7 +180,6 @@ class StepActionService(StepAction):
 class StepActionSimple(StepAction):
     def load(self, node, parentStep):
         super(StepActionSimple, self).load(node, parentStep)
-
 
 class StepActionSession(StepAction):
     def load(self, node, parentStep):
@@ -249,15 +239,32 @@ class TestCase(object):
         '''
         Load an XML TC to build a tree in memory
         '''
-        doc = minidom.parse(self.tcFileName)
+
+        tcString = self._readTestCase(self.tcFileName)
+        doc = minidom.parseString(tcString)
         self.rootStep = StepTestCase()
         self.rootStep.load(doc.documentElement, None)
 
         # self.printout(doc.documentElement, '')
-
 
     def save(self):
         '''
         Dump the test case tree in memory into a XML TC file
         '''
         pass
+
+    def _readTestCase(self, tcFileName):
+        f = open(tcFileName)
+        text = f.read()
+        f.close()
+
+        return cleanInvalidXmlChars(text)
+
+def cleanInvalidXmlChars(dirtyXmlString):
+    myre = re.compile('[\x3f\xa1\xa5\xa6\xe2\x80\x98\x99\x9c\x9d]')
+    return myre.sub('', dirtyXmlString)
+
+if __name__ == '__main__':
+    tc = TestCase('D:\\Repository\\R_2_10_0\\doc\\examples\\service\\MS_LTE\\Attach.tc')
+    tc.load()
+    print('haha')

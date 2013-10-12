@@ -2,7 +2,7 @@ from testcase import testcase
 from testcase import visitor
 
 class Tc2Tet(visitor.Visitor):
-    tcTemplate = """Testcase General Information
+    tcTemplate = u"""Testcase General Information
 TC_ID {tcid}
 QC_ID {qcid}
 Title {title}
@@ -11,7 +11,7 @@ Created {created}
 Purpose {purpose}
 Usage {usage}
 """
-    functionTemplate = """function::{name}
+    functionTemplate = u"""function::{name}
   {name}:description
 {description}
 
@@ -29,7 +29,7 @@ Usage {usage}
         self.tet = []
 
     def _getIndent(self):
-        return  '    ' + '  ' * self.level
+        return  u'    ' + u'  ' * self.level
 
     def transformFromTestCase(self, tc):
         self.tcFileName = tc.tcFileName
@@ -62,10 +62,10 @@ Usage {usage}
             self.visit(eachFunction)
 
     def visit_StepFunction(self, node):
-        arguments = ['{indent}{type} {name}'.format(indent = self._getIndent(), type = arg['type'], name = arg['name'])
+        arguments = [u'{indent}{type} {name}'.format(indent = self._getIndent(), type = arg['type'], name = arg['name'])
                       for arg in node.data['arguments']]
 
-        variables = ['{indent}{type} {name}'.format(indent = self._getIndent(), type = var['type'], name = var['name'])
+        variables = [u'{indent}{type} {name}'.format(indent = self._getIndent(), type = var['type'], name = var['name'])
                       for var in node.data['variables']]
 
         self.tet.append(
@@ -79,7 +79,7 @@ Usage {usage}
             self.visit(eachStep)
 
     def visit_StepActionService(self, node):
-        self.tet.append('{indent}{object}.{action} {parameter}'.format(
+        self.tet.append(u'{indent}{object}.{action} {parameter}'.format(
             indent = self._getIndent(),
             object = node.data['object'],
             action = node.data['action'],
@@ -91,7 +91,7 @@ Usage {usage}
         self.level -= 1
 
     def visit_StepActionSimple(self, node):
-        self.tet.append('{indent}{action} {parameter}'.format(
+        self.tet.append(u'{indent}{action} {parameter}'.format(
             indent = self._getIndent(),
             action = node.data['action'],
             parameter = node.data['parameter']))
@@ -102,7 +102,7 @@ Usage {usage}
         self.level -= 1
 
     def visit_StepActionSession(self, node):
-        self.tet.append('{indent}{object}.{action} {parameter}'.format(
+        self.tet.append(u'{indent}{object}.{action} {parameter}'.format(
             indent = self._getIndent(),
             object = node.data['object'],
             action = node.data['action'],
@@ -115,4 +115,4 @@ Usage {usage}
 
 if __name__ == '__main__':
     t = Tc2Tet()
-    print(t.transform('C:\\Users\\zhzhong\\.EasyTest\\2.7.1Free\\workspace\\tc\\language\\action\\assertEqual\\testAction_assertEqual_UsingVariableForRegExpString.tc'))
+    k = t.transform('D:\\Repository\\R_2_10_0\\doc\\examples\\service\\MS_LTE\\Attach.tc')
